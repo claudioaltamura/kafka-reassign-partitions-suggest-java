@@ -1,0 +1,8 @@
+todos
+=====
+
+* input validation
+* mark nonnull objects
+* write input scanner
+* write cli options
+* write tests
