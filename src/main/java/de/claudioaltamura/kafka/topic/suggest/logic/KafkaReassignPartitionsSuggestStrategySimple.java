@@ -1,11 +1,11 @@
 package de.claudioaltamura.kafka.topic.suggest.logic;
 
-import java.util.Set;
-import java.util.TreeSet;
 import de.claudioaltamura.kafka.topic.suggest.model.KafkaReassignPartitions;
 import de.claudioaltamura.kafka.topic.suggest.model.KafkaTopicsDescribeDetails;
 import de.claudioaltamura.kafka.topic.suggest.model.Partition;
 import de.claudioaltamura.kafka.topic.suggest.model.PartitionInput;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class KafkaReassignPartitionsSuggestStrategySimple
     implements KafkaReassignPartitionsSuggestStrategy {
@@ -14,8 +14,8 @@ public class KafkaReassignPartitionsSuggestStrategySimple
   private int[] brokerCounter;
 
   @Override
-  public KafkaReassignPartitions suggest(String topic,
-      KafkaTopicsDescribeDetails kafkaTopicsDescribeDetails, int[] brokerIds) {
+  public KafkaReassignPartitions suggest(
+      String topic, KafkaTopicsDescribeDetails kafkaTopicsDescribeDetails, int[] brokerIds) {
     // TODO input validation
     brokerCounter = new int[brokerIds.length];
 
@@ -30,20 +30,24 @@ public class KafkaReassignPartitionsSuggestStrategySimple
     return kafkaReassignmentPartitions;
   }
 
-  private void assertEqualDistribution(KafkaTopicsDescribeDetails kafkaTopicsDescribeDetails,
-      int[] brokerIds) {
-    int numberOfReplicas = kafkaTopicsDescribeDetails.getPartitionCount()
-        * kafkaTopicsDescribeDetails.getReplicationFactor();
+  private void assertEqualDistribution(
+      KafkaTopicsDescribeDetails kafkaTopicsDescribeDetails, int[] brokerIds) {
+    int numberOfReplicas =
+        kafkaTopicsDescribeDetails.getPartitionCount()
+            * kafkaTopicsDescribeDetails.getReplicationFactor();
     int avgReplicasPerBroker = numberOfReplicas / brokerIds.length;
     for (int i = 0; i < brokerCounter.length; i++) {
       if (brokerCounter[i] != avgReplicasPerBroker) {
-        throw new IllegalStateException(String.format("broker '%d' has more replicas '%d' than average '%d'.", i, brokerCounter[i], avgReplicasPerBroker));
+        throw new IllegalStateException(
+            String.format(
+                "broker '%d' has more replicas '%d' than average '%d'.",
+                i, brokerCounter[i], avgReplicasPerBroker));
       }
     }
   }
 
-  private Set<Partition> createPartitionWithLeader(String topic,
-      KafkaTopicsDescribeDetails kafkaTopicsDescribeDetails) {
+  private Set<Partition> createPartitionWithLeader(
+      String topic, KafkaTopicsDescribeDetails kafkaTopicsDescribeDetails) {
     Set<Partition> partitions = new TreeSet<>();
     for (PartitionInput partitionInput : kafkaTopicsDescribeDetails.getPartitions()) {
       int[] replicas = new int[] {partitionInput.getLeader(), 0, 0};
@@ -58,7 +62,8 @@ public class KafkaReassignPartitionsSuggestStrategySimple
   }
 
   private void fillPartitionsWithFollowReplicas(
-      KafkaTopicsDescribeDetails kafkaTopicsDescribeDetails, Set<Partition> partitions,
+      KafkaTopicsDescribeDetails kafkaTopicsDescribeDetails,
+      Set<Partition> partitions,
       int[] brokerIds) {
     for (int i = 1; i < kafkaTopicsDescribeDetails.getReplicationFactor(); i++) {
       for (Partition partition : partitions) {
@@ -107,5 +112,4 @@ public class KafkaReassignPartitionsSuggestStrategySimple
     }
     return minIndex;
   }
-
 }

@@ -5,6 +5,6 @@ import de.claudioaltamura.kafka.topic.suggest.model.KafkaTopicsDescribeDetails;
 
 public interface KafkaReassignPartitionsSuggestStrategy {
 
-  KafkaReassignPartitions suggest(String topic,
-      KafkaTopicsDescribeDetails kafkaTopicsDescribeDetails, int[] brokerIds);
+  KafkaReassignPartitions suggest(
+      String topic, KafkaTopicsDescribeDetails kafkaTopicsDescribeDetails, int[] brokerIds);
 }

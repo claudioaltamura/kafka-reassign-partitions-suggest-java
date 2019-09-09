@@ -11,19 +11,15 @@ public class Partition implements Comparable<Partition> {
 
   @Override
   public int compareTo(Partition other) {
-    //TODO improve
-    if (other.getTopic() == null)
-      return 1;
+    // TODO improve
+    if (other.getTopic() == null) return 1;
     var topicComparison = topic.compareTo(other.topic);
     if (topicComparison != 0) {
       return topicComparison;
     }
 
-    if (this.partition < other.partition)
-      return -1;
-    else if (this.partition == other.partition)
-      return 0;
-    else
-      return 1;
+    if (this.partition < other.partition) return -1;
+    else if (this.partition == other.partition) return 0;
+    else return 1;
   }
 }
